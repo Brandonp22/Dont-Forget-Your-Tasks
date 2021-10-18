@@ -1,2 +1,3 @@
-# Dont-Forget-Your-Tasks
-App de lista de tareas en ionic + vue
+# Dont Forget Your Tasks
+
+Lista de tareas App
