@@ -130,12 +130,13 @@
 </template>
 
 <script>
-import {defineComponent,ref} from 'vue';
+import {defineComponent,reactive, ref, computed, onMounted} from 'vue';
 import { IonPage, IonToolbar,IonButtons,IonBackButton,IonIcon, IonContent,
 IonCardTitle,IonListHeader,IonItemSliding,IonItemOptions,IonItemOption,
 IonLabel,IonCheckbox,IonList,IonItem,IonFab,IonFabButton,IonModal} from '@ionic/vue';
 import {ellipsisVertical,clipboard,trash,add} from 'ionicons/icons'; 
 import NewTask from '@/components/NewTask.vue';
+import {useStore} from 'vuex'; 
 export default defineComponent({
 
     components:{
@@ -147,8 +148,23 @@ export default defineComponent({
 
     setup(){
         const isOpenNewTask = ref(false);
+        const store = useStore();
+        const state = reactive({
+            tasks: computed(() => {
+                return store.state.tasks;
+            })
+        })
+
+        function getTasks(params){
+            store.commit('getTasks');
+        }
+
+        onMounted(() => {
+            getTasks();
+        })
+
         return{
-            isOpenNewTask,
+            isOpenNewTask,store,getTasks,
             ellipsisVertical,clipboard,trash,add
         }
     }
