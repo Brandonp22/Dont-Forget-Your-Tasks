@@ -18,7 +18,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Todo</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfAllTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -34,7 +34,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Trabajo</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfWorkTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -50,7 +50,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Musica</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfMusicTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -65,7 +65,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Viajes</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfTravelTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -81,7 +81,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Estudios</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfStudyTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -97,7 +97,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Casa</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfHomeTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -113,7 +113,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Deportes</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfSportTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -129,7 +129,7 @@
 
                         <ion-card-content>
                             <ion-card-title class="text-2xl">Compras</ion-card-title>
-                            <!--<ion-card-subtitle>{{state.lengthOfAllTasks}} Tasks</ion-card-subtitle>-->
+                            <ion-card-subtitle>{{state.lengthOfShoppingTasks}} Tareas</ion-card-subtitle>
                         </ion-card-content>
 
                     </router-link>
@@ -158,23 +158,61 @@
 </template>
 
 <script lang="ts">
-import {defineComponent,ref} from 'vue';
-import { IonPage,IonCard,IonCardHeader,IonIcon,IonCardContent,IonCardTitle,
+import {computed, defineComponent,onMounted,ref,reactive} from 'vue';
+import { IonPage,IonCard,IonCardHeader,IonIcon,IonCardContent,IonCardTitle,IonCardSubtitle,
 IonFab,IonFabButton,IonModal,} from '@ionic/vue';
 import { clipboard,briefcase,headset,airplane,book,home,football,cart,add} from 'ionicons/icons'; 
 import NewTask from '@/components/NewTask.vue';
+import {useStore} from 'vuex';
 export default defineComponent({
     name: 'Lists',
     components:{
-       IonPage,IonCard,IonCardHeader,IonIcon,IonCardContent,IonCardTitle,
+       IonPage,IonCard,IonCardHeader,IonIcon,IonCardContent,IonCardTitle,IonCardSubtitle,
        IonFab,IonFabButton,IonModal,NewTask
     },
 
     setup(){
 
         const isOpenNewTask = ref(false);
+        const store = useStore();
+        const state = reactive({
+            lengthOfAllTasks: computed(() => {
+                return store.state.tasks.length;
+            }),
+            lengthOfWorkTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Trabajo');
+            }),
+            lengthOfMusicTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Musica');
+            }),
+            lengthOfTravelTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Viajes');
+            }),
+            lengthOfStudyTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Estudios');
+            }),
+            lengthOfHomeTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Casa');
+            }),
+            lengthOfSportTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Deportes');
+            }),
+            lengthOfShoppingTasks: computed(() => {
+                return store.getters.lengthTasksByCategory('Compras');
+            }),
+        })
+
+        function getTasks(){
+            store.commit('getTasks');
+        }
+
+        onMounted(() => {
+            if(store.state.tasks.length == 0) {
+                getTasks();
+            }
+        })
         return{
-            isOpenNewTask,
+            isOpenNewTask,store,state,getTasks,
             clipboard,briefcase,headset,airplane,book,home,football,cart,add
         }
     }

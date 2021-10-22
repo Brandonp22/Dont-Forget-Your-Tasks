@@ -15,103 +15,108 @@
             </div>
             <div class="text-center">
                 <ion-card-title class="text-2xl">Estudios</ion-card-title>
+                <ion-card-subtitle>{{state.tasksStudy.length}} Tareas</ion-card-subtitle>
             </div>
         </div>
 
         <div>
-            <ion-list>
-                <ion-list-header>
-                    <ion-label>Tarde <span class="text-gray-600 text-base">0</span></ion-label>
-                </ion-list-header>
-                <ion-item-sliding>
-                    <ion-item-options side="start">
-                        <ion-item-option color="danger" expandable>
-                            <ion-icon :icon="trash" size="large"></ion-icon>
-                        </ion-item-option>
-                    </ion-item-options>
-                    <ion-item detail="true">
-                        <ion-label>
-                            <h2></h2>
-                            <p style="color:red"></p>
-                        </ion-label>
-                    </ion-item>
-                    <ion-item-options side="end">
-                        <ion-item-option color="primary" expandable>
-                            <ion-checkbox></ion-checkbox>
-                        </ion-item-option>
-                    </ion-item-options>
-                </ion-item-sliding>
-            </ion-list>
-                        <ion-list>
-                <ion-list-header>
-                    <ion-label>Hoy <span class="text-gray-600 text-base">0</span></ion-label>
-                </ion-list-header>
-                <ion-item-sliding>
-                    <ion-item-options side="start">
-                        <ion-item-option color="danger" expandable>
-                            <ion-icon :icon="trash" size="large"></ion-icon>
-                        </ion-item-option>
-                    </ion-item-options>
-                    <ion-item detail="true">
-                        <ion-label>
-                            <h2></h2>
-                            <p style="color:red"></p>
-                        </ion-label>
-                    </ion-item>
-                    <ion-item-options side="end">
-                        <ion-item-option color="primary" expandable>
-                            <ion-checkbox></ion-checkbox>
-                        </ion-item-option>
-                    </ion-item-options>
-                </ion-item-sliding>
-            </ion-list>
-                        <ion-list>
-                <ion-list-header>
-                    <ion-label>Más Tarde <span class="text-gray-600 text-base">0</span></ion-label>
-                </ion-list-header>
-                <ion-item-sliding>
-                    <ion-item-options side="start">
-                        <ion-item-option color="danger" expandable>
-                            <ion-icon :icon="trash" size="large"></ion-icon>
-                        </ion-item-option>
-                    </ion-item-options>
-                    <ion-item detail="true">
-                        <ion-label>
-                            <h2></h2>
-                            <p style="color:red"></p>
-                        </ion-label>
-                    </ion-item>
-                    <ion-item-options side="end">
-                        <ion-item-option color="primary" expandable>
-                            <ion-checkbox></ion-checkbox>
-                        </ion-item-option>
-                    </ion-item-options>
-                </ion-item-sliding>
-            </ion-list>
-                        <ion-list>
-                <ion-list-header>
-                    <ion-label>Terminado <span class="text-gray-600 text-base">0</span></ion-label>
-                </ion-list-header>
-                <ion-item-sliding>
-                    <ion-item-options side="start">
-                        <ion-item-option color="danger" expandable>
-                            <ion-icon :icon="trash" size="large"></ion-icon>
-                        </ion-item-option>
-                    </ion-item-options>
-                    <ion-item detail="true">
-                        <ion-label>
-                            <h2></h2>
-                            <p style="color:red"></p>
-                        </ion-label>
-                    </ion-item>
-                    <ion-item-options side="end">
-                        <ion-item-option color="primary" expandable>
-                            <ion-checkbox></ion-checkbox>
-                        </ion-item-option>
-                    </ion-item-options>
-                </ion-item-sliding>
-            </ion-list>
-        </div>
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>Tarde <span class="text-gray-600 text-base">{{state.late.length}}</span></ion-label>
+                    </ion-list-header>
+                    <ion-item-sliding v-for="item in state.late" :key="item.id">
+                        <ion-item-options side="start">
+                            <ion-item-option @click="deleteTask(item)" color="danger" expandable>
+                                <ion-icon :icon="trash" size="large"></ion-icon>
+                            </ion-item-option>
+                        </ion-item-options>
+                        <ion-item detail="true">
+                            <ion-label>
+                                <h2>{{item.task}}</h2>
+                                <p style="color:red">{{item.dueDate}}</p>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item-options side="end">
+                            <ion-item-option @click="doneTask(item)" color="primary" expandable>
+                                <ion-checkbox :checked="item.done"></ion-checkbox>
+                            </ion-item-option>
+                        </ion-item-options>
+
+                    </ion-item-sliding>
+                </ion-list>
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>Hoy <span class="text-gray-600 text-base">{{state.today.length}}</span></ion-label>
+                    </ion-list-header>
+                    <ion-item-sliding v-for="item in state.today" :key="item.id">
+                        <ion-item-options side="start">
+                            <ion-item-option @click="deleteTask(item)" color="danger" expandable>
+                                <ion-icon :icon="trash" size="large"></ion-icon>
+                            </ion-item-option>
+                        </ion-item-options>
+                        <ion-item detail="true">
+                            <ion-label>
+                               <h2>{{item.task}}</h2>
+                                <p>{{item.dueDate}}</p>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item-options side="end">
+                            <ion-item-option @click="doneTask(item)" color="primary" expandable>
+                                <ion-checkbox :checked="item.done"></ion-checkbox>
+                            </ion-item-option>
+                        </ion-item-options>
+
+                    </ion-item-sliding>
+                </ion-list>
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>Más Tarde <span class="text-gray-600 text-base">{{state.later.length}}</span></ion-label>
+                    </ion-list-header>
+                    <ion-item-sliding v-for="item in state.later" :key="item.id">
+                        <ion-item-options side="start">
+                            <ion-item-option @click="deleteTask(item)" color="danger" expandable>
+                                <ion-icon :icon="trash" size="large"></ion-icon>
+                            </ion-item-option>
+                        </ion-item-options>
+                        <ion-item detail="true">
+                            <ion-label>
+                                <h2>{{item.task}}</h2>
+                                <p>{{item.dueDate}}</p>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item-options side="end">
+                            <ion-item-option @click="doneTask(item)" color="primary" expandable>
+                                <ion-checkbox :checked="item.done"></ion-checkbox>
+                            </ion-item-option>
+                        </ion-item-options>
+
+                    </ion-item-sliding>
+                </ion-list>
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>Terminado <span class="text-gray-600 text-base">{{state.done.length}}</span></ion-label>
+                    </ion-list-header>
+                    <ion-item-sliding v-for="item in state.done" :key="item.id">
+                        <ion-item-options side="start">
+                            <ion-item-option @click="deleteTask(item)" color="danger" expandable>
+                                <ion-icon :icon="trash" size="large"></ion-icon>
+                            </ion-item-option>
+                        </ion-item-options>
+                        <ion-item detail="true">
+                            <ion-label>
+                                <h2 style="color:#3490dc"><s>{{item.task}}</s></h2>
+                                <p><s>{{item.dueDate}}</s></p>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item-options side="end">
+                            <ion-item-option @click="notDoneTask(item)" color="white" expandable>
+                                <ion-checkbox :checked="item.done"></ion-checkbox>
+                            </ion-item-option>
+                        </ion-item-options>
+
+                    </ion-item-sliding>
+                </ion-list>
+            </div>
     </ion-content>
     <div>
         <ion-fab @click="isOpenNewTask = true" vertical="bottom" horizontal="end" slot="fixed">
@@ -130,25 +135,62 @@
 </template>
 
 <script>
-import {defineComponent,ref} from 'vue';
+import {defineComponent,onMounted,reactive,ref,computed} from 'vue';
 import { IonPage, IonToolbar,IonButtons,IonBackButton,IonIcon, IonContent,
-IonCardTitle,IonListHeader,IonItemSliding,IonItemOptions,IonItemOption,
+IonCardTitle,IonCardSubtitle,IonListHeader,IonItemSliding,IonItemOptions,IonItemOption,
 IonLabel,IonCheckbox,IonList,IonItem,IonFab,IonFabButton,IonModal} from '@ionic/vue';
 import {ellipsisVertical,book,trash,add} from 'ionicons/icons'; 
 import NewTask from '@/components/NewTask.vue';
+import {useStore} from 'vuex'; 
 export default defineComponent({
 
     components:{
        IonPage,IonToolbar,IonButtons,IonBackButton,IonIcon,IonContent,
-       IonCardTitle,IonListHeader,IonItemSliding,IonItemOptions,IonItemOption,
+       IonCardTitle,IonCardSubtitle,IonListHeader,IonItemSliding,IonItemOptions,IonItemOption,
        IonLabel,IonCheckbox,IonList,IonItem,IonFab,IonFabButton,IonModal,
        NewTask
     },
 
-    setup(){
+setup(){
         const isOpenNewTask = ref(false);
+        const store = useStore();
+        const state = reactive({
+            tasksStudy: computed(() => {
+                return store.getters.tasksByCategory('Estudios');
+            }),
+            today: computed(() => {
+                return store.getters.today(state.tasksStudy);
+            }),
+            late: computed(() => {
+                return store.getters.late(state.tasksStudy);
+            }),
+            later: computed(() => {
+                return store.getters.later(state.tasksStudy);
+            }),
+            done: computed(() => {
+                return store.getters.done(state.tasksStudy);
+            })
+        })
+        function getTasksStudy() {
+            store.commit('getTasks');
+        }
+        function doneTask(item) {
+            store.commit('doneTask',item);
+        }
+        function notDoneTask(item) {
+            store.commit('notDoneTask',item);
+        }
+        function deleteTask(item) {
+            store.commit('deleteTask',item);
+        }
+        onMounted(() => {
+            if (store.state.tasks.length == 0) {
+                getTasksStudy();    
+            }
+            
+        })
         return{
-            isOpenNewTask,
+            isOpenNewTask,store,state,getTasksStudy,doneTask,notDoneTask,deleteTask,
             ellipsisVertical,book,trash,add
         }
     }
