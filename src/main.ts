@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-
+import firebase from './firebase';
 import { IonicVue } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -26,13 +26,21 @@ import './theme/variables.css';
 /* Tailwindcss */
 import '../public/assets/css/style.css';
 
+import useFirebaseAuth from "./hooks/firebase-auth";
 import store from './store/index';
+
+const { authCheck } = useFirebaseAuth();
 
 const app = createApp(App)
   .use(IonicVue)
-  .use(router)
   .use(store);
+
+  authCheck()
+  .then(() => {
+    app.use(router);
+    router.isReady();
+  })
+  .then(() => {
+    app.mount("#app");
+  });  
   
-router.isReady().then(() => {
-  app.mount('#app');
-});
