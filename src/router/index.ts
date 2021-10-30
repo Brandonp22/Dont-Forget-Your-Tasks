@@ -9,8 +9,7 @@ import Travel from '../views/Travel.vue'
 import Study from '../views/Study.vue'
 import Sport from '../views/Sport.vue'
 import Shopping from '../views/Shopping.vue'
-import Login from '../views/Auth/Login.vue'
-import Register from '../views/Auth/Register.vue'
+import PrincipalPage from '../views/PrincipalPage.vue'
 
 import useFirebaseAuth from "../hooks/firebase-auth";
 const state = useFirebaseAuth();
@@ -65,16 +64,10 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Shopping',
     component: Shopping
   },
-  //Login & Register
   {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/Register',
-    name: 'Register',
-    component: Register
+    path: '/PrincipalPage',
+    name: 'PrincipalPage',
+    component: PrincipalPage
   }
 ]
 
@@ -85,10 +78,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   console.log("user",state.user.value);
-  if (state.user.value && (to.name === 'login')) {
+  if (state.user.value && (to.name === 'PrincipalPage')) {
     next({ name: "Lists", replace: true });
-  } else if (!state.user.value && (to.name !== 'login')) {
-    next({ name: "login", replace: true });
+  } else if (!state.user.value && (to.name !== 'PrincipalPage')) {
+    next({ name: "PrincipalPage", replace: true });
   } else {
     next();
   }

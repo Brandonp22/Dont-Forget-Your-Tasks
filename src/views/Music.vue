@@ -144,6 +144,7 @@ IonCardTitle,IonCardSubtitle,IonListHeader,IonItemSliding,IonItemOptions,IonItem
 IonLabel,IonCheckbox,IonList,IonItem,IonFab,IonFabButton,IonModal } from '@ionic/vue';
 import {ellipsisVertical,headset,trash,add} from 'ionicons/icons';
 import NewTask from '@/components/NewTask.vue';
+import firebase from '@/firebase';
 import {useStore} from 'vuex'; 
 export default defineComponent({
 
@@ -176,7 +177,8 @@ export default defineComponent({
             })
         })
         function getTasksMusic() {
-            store.commit('getTasks');
+            store.commit('getTasks', firebase.auth().currentUser?.uid);
+            console.log("USER LOG",  firebase.auth().currentUser?.uid);
         }
         function doneTask(item) {
             store.commit('doneTask',item);

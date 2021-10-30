@@ -2,8 +2,8 @@ import { createStore } from "vuex";
 
 import firebase from "@/firebase";
 const db = firebase.firestore();
-const store = createStore({
 
+const store = createStore({
     state:{
         tasks: Array<any>(),
         options:{
@@ -64,10 +64,11 @@ const store = createStore({
     },
     mutations:{
 
-        getTasks: (state) => {
+        getTasks: (state,idRef: any) => {
 
             state.tasks = [];
-            db.collection('tasks')
+            db.collection('users').doc(idRef)
+            .collection('tasks')
             .onSnapshot((querySnapshot: any) => {
                 state.tasks = [];
 

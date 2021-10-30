@@ -3,7 +3,12 @@
     <ion-page>
         <div class="flex w-full flex-col overflow-auto">
             <div class="mt-2">
-                <h1 class="text-4xl pl-5 font-semibold">Lista de Tareas</h1>
+                        <ion-toolbar>
+                            <ion-title class="text-2xl pl-5 font-semibold">Lista de Tareas</ion-title>
+                            <ion-buttons slot="end">
+                                <ion-button @click="doLogout">Cerrar Sesión</ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
             </div>
 
             <div class="flex w-full flex-row flex-wrap justify-around mt-2">
@@ -164,6 +169,9 @@ IonFab,IonFabButton,IonModal,} from '@ionic/vue';
 import { clipboard,briefcase,headset,airplane,book,home,football,cart,add} from 'ionicons/icons'; 
 import NewTask from '@/components/NewTask.vue';
 import {useStore} from 'vuex';
+import useFirebaseAuth from "@/hooks/firebase-auth";
+import firebase from '@/firebase';
+import { useRouter } from "vue-router";
 export default defineComponent({
     name: 'Lists',
     components:{
@@ -172,9 +180,10 @@ export default defineComponent({
     },
 
     setup(){
-
         const isOpenNewTask = ref(false);
         const store = useStore();
+        const {logout } = useFirebaseAuth();
+        const router = useRouter();
         const state = reactive({
             lengthOfAllTasks: computed(() => {
                 return store.state.tasks.length;
@@ -203,7 +212,8 @@ export default defineComponent({
         })
 
         function getTasks(){
-            store.commit('getTasks');
+            store.commit('getTasks', firebase.auth().currentUser?.uid);
+            console.log("USER LOG",  firebase.auth().currentUser?.uid);
         }
 
         onMounted(() => {
@@ -211,8 +221,14 @@ export default defineComponent({
                 getTasks();
             }
         })
+        const doLogout = async () => {
+            await logout();
+            router.replace({ path: "/PrincipalPage"});
+            location.reload();
+    };
+
         return{
-            isOpenNewTask,store,state,getTasks,
+            isOpenNewTask,store,state,getTasks,doLogout,
             clipboard,briefcase,headset,airplane,book,home,football,cart,add
         }
     }

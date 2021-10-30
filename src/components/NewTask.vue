@@ -1,5 +1,6 @@
 <template>
     <ion-page>
+
         
         <div class= "mt-2">
             <h2 class="text-center text-2x1 font-semibold">Nueva Tarea</h2>
@@ -99,6 +100,7 @@ export default defineComponent({
     },
 
     setup(){
+        const userIdRef = firebase.auth().currentUser?.uid;
         const task = ref('');
         const dueDate = ref('');
         const note = ref('');
@@ -111,7 +113,8 @@ export default defineComponent({
         }
 
         function addTask(params){
-            db.collection('tasks')
+            db.collection('users').doc(userIdRef)
+            .collection('tasks')
               .add({
                   task: task.value,
                   note: note.value,
@@ -127,7 +130,8 @@ export default defineComponent({
 
                   this.$emit('close-modal');
 
-                  console.log('Se ha cargado con exito!');
+                  console.log('Se ha cargado con exito! ', userIdRef);
+
               })
               .catch((error) =>{
                   console.log('Error al cargar: ',error);

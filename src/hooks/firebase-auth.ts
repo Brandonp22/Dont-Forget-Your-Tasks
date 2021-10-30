@@ -2,7 +2,6 @@ import { toRefs, reactive } from "vue";
 import firebase from "firebase";
 // Required for side-effects
 import "firebase/firestore";
-
 import FIREBASE_CONFIG from "../firebase";
 
 // initialize firebase, this is directly from the firebase documentation
@@ -12,6 +11,7 @@ if (firebase.apps.length === 0) {
 }
 
 // const USERS_COLLECTION_PATH = "users/";
+
 
 type TState = {
   error: Error | null;
